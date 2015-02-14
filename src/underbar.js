@@ -62,7 +62,7 @@
       }
     } else {
       for (var i = 0; i < collection.length; i++) {
-      iterator(collection[i],i,collection);
+        iterator(collection[i],i,collection);
       }
     }  
   };
@@ -106,14 +106,15 @@
     return result;
   };
 
-  /* Couldn't find solution using _.filter
+/*
+  // After researching solution for using _.filter:
   _.reject = function(collection, test) {
- // test = ..some code
-};
-  return filter(collection, test);    
-};
+    var filtered = _.filter(collection, test);
+    return _.filter(collection, function(x) {
+      return filtered.indexOf(x) < 0;
+    });
+  };
 */
-
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var results = [];
@@ -271,12 +272,28 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-  };
+  for (var i = 1; i < arguments.length; i++) {
+    var sourceobj = arguments[i];
+    for (var x in sourceobj) {
+      obj[x] = sourceobj[x];
+    }
+  }
+  return obj;
+};
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-  };
+  for (var i = 1; i < arguments.length; i++) {
+    var sourceobj = arguments[i];
+    for (var x in sourceobj) {
+      if (!obj.hasOwnProperty(x)) {
+          obj[x] = sourceobj[x];
+      }
+    }
+  }
+  return obj;
+};
 
 
   /**
@@ -377,7 +394,10 @@
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {
+  _.flatten = function(nestedArray) {
+    return nestedArray.reduce(function(a,b) {
+      return a.concat(b);
+    });        
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
