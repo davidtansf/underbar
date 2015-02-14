@@ -58,7 +58,7 @@
   _.each = function(collection, iterator) {
     if (collection.constructor === Object) {
       for (var x in collection) {
-        iterator(collection[x],x, collection)
+        iterator(collection[x],x, collection);
       }
     } else {
       for (var i = 0; i < collection.length; i++) {
@@ -116,6 +116,19 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    var results = [];
+    var compare = array[0];
+    results.push(compare);
+    array = array.sort(function(a, b) {
+      return a - b;
+    });    
+    for (var i = 1; i < array.length; i++) {
+      if (array[i] !== compare) {
+        compare = array[i];
+        results.push(compare);
+      }
+    }
+    return results;
   };
 
 
