@@ -182,15 +182,28 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
-  _.reduce = function(collection, iterator, accumulator) { 
+
+  _.reduce = function(collection, iterator, accumulator) {
     if (arguments.length !== 3) {
-      accumulator = collection.shift();
-    }
-    for (var i = 0; i < collection.length; i++) {
-      accumulator = iterator(accumulator, collection[i]);
-    }
-    return accumulator;
-  };
+      if (collection.constructor === Object) {
+        // unsure what to put here;
+      }
+       else {
+        accumulator = collection.shift();
+      }
+    }  
+    if (collection.constructor === Object) {
+      for (var x in collection) {
+        accumulator = iterator(accumulator, collection[x]);
+      }
+    } 
+    else {
+      for (var i = 0; i < collection.length; i++) {
+        accumulator = iterator(accumulator, collection[i]);
+      }
+    }  
+  return accumulator;
+};
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
@@ -206,14 +219,36 @@
 
 
   // Determine whether all of the elements match a truth test.
+  // TIP: Try re-using reduce() here.
   _.every = function(collection, iterator) {
-    // TIP: Try re-using reduce() here.
+    if (arguments.length !== 2) {
+      iterator = function(predicate) {
+        return predicate === true;
+      }
+    }  
+    for (var i = 0; i < collection.length; i++) {
+      if (!iterator(collection[i])) {
+        return false;
+      }
+    }
+    return true;
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
+  // TIP: There's a very clever way to re-use every() here.
   _.some = function(collection, iterator) {
-    // TIP: There's a very clever way to re-use every() here.
+    if (arguments.length !== 2) {
+      iterator = function(predicate) {
+        return predicate === true;
+      }
+    }  
+    for (var i = 0; i < collection.length; i++) {
+      if (iterator(collection[i])) {
+        return true;
+      }
+    }
+    return false;
   };
 
 
@@ -310,7 +345,7 @@
   };
 
 
-  /**
+  /***********************************************************************
    * EXTRA CREDIT
    * =================
    *
