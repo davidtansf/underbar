@@ -96,6 +96,7 @@
   };
 
   // Return all elements of an array that don't pass a truth test.
+  
   _.reject = function(collection, test) {
     var result = [];
     for (var i = 0; i < collection.length; i++) {
@@ -105,16 +106,18 @@
     }
     return result;
   };
-
+ 
 /*
+
   // After researching solution for using _.filter:
   _.reject = function(collection, test) {
     var filtered = _.filter(collection, test);
-    return _.filter(collection, function(x) {
+     _.filter(collection, function(x) {
       return filtered.indexOf(x) < 0;
     });
   };
-*/
+ */ 
+
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var results = [];
@@ -187,7 +190,11 @@
   _.reduce = function(collection, iterator, accumulator) {
     if (arguments.length !== 3) {
       if (collection.constructor === Object) {
-        // unsure what to put here;
+        for (x in collection) {
+          accumulator = collection[x];
+          delete collection[x];
+          break;
+        }
       }
        else {
         accumulator = collection.shift();
@@ -358,7 +365,33 @@
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
-  _.shuffle = function(array) {
+  _.shuffle = function(sourceArray) {
+    var shuffledArray = [];
+    while (shuffledArray.length < sourceArray.length) {
+      getFull();
+    }
+    var shuffleOrder = '';
+    var testOrder = '';
+    for (var j = 0; j < sourceArray.length; j++) {
+      shuffleOrder += shuffledArray[j].toString();
+      testOrder += j.toString();
+    }
+    if (shuffleOrder === testOrder) {
+      return shuffle(sourceArray);
+    }
+    for (var i = 0; i < sourceArray.length; i++ ) {
+      shuffledArray[i] = sourceArray[shuffledArray[i]];
+    }
+    function getFull() {
+      var element = Math.floor(Math.random() * sourceArray.length);
+      for (var i = 0; i < shuffledArray.length; i++) {
+        if (shuffledArray[i] === element) {
+          return getFull();
+        }    
+      } 
+      shuffledArray.push(element);
+    }
+    return shuffledArray;  
   };
 
 
