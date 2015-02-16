@@ -343,6 +343,7 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    // unable to solve reimplementation
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -352,6 +353,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    return setTimeout(func, wait);    
   };
 
 
@@ -377,7 +379,7 @@
       testOrder += j.toString();
     }
     if (shuffleOrder === testOrder) {
-      return shuffle(sourceArray);
+      return _.shuffle(sourceArray);
     }
     for (var i = 0; i < sourceArray.length; i++ ) {
       shuffledArray[i] = sourceArray[shuffledArray[i]];
