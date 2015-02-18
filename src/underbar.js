@@ -87,11 +87,20 @@
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
     var result = [];
-    for (var i = 0; i < collection.length; i++) {
-      if (test(collection[i])) {
-          result.push(collection[i]);
-      }
+    if (collection.constructor === Object) {
+      for (var x in collection) {
+        if (test(collection[x])) {
+          result.push(collection[x]);
+        }
+      }  
     }
+    else {
+      for (var i = 0; i < collection.length; i++) {
+        if (test(collection[i])) {
+          result.push(collection[i]);
+        }
+      }
+    }   
     return result;
   };
 
@@ -99,11 +108,20 @@
   
   _.reject = function(collection, test) {
     var result = [];
-    for (var i = 0; i < collection.length; i++) {
-      if (!test(collection[i])) {
-          result.push(collection[i]);
-      }
+    if (collection.constructor === Object) {
+      for (var x in collection) {
+        if (!test(collection[x])) {
+          result.push(collection[x]);
+        }
+      }  
     }
+    else {
+      for (var i = 0; i < collection.length; i++) {
+        if (!test(collection[i])) {
+          result.push(collection[i]);
+        }
+      }
+    }   
     return result;
   };
  
@@ -139,11 +157,18 @@
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
     var newArray = [];
-    for (var i = 0; i < collection.length; i++) {
-      newArray.push(iterator(collection[i]));      
+    if (collection.constructor === Object) {
+      for (var x in collection) {
+        newArray.push(iterator(collection[x]));
+      }  
     }
+    else {
+      for (var i = 0; i < collection.length; i++) {
+        newArray.push(iterator(collection[i])); 
+      }  
+    }  
     return newArray;
-  };    
+  };
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
