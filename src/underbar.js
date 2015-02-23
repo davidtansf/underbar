@@ -139,11 +139,11 @@
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var results = [];
-    var compare = array[0];
-    results.push(compare);
     array = array.sort(function(a, b) {
       return a - b;
-    });    
+    }); 
+    var compare = array[0];  
+    results.push(compare); 
     for (var i = 1; i < array.length; i++) {
       if (array[i] !== compare) {
         compare = array[i];
