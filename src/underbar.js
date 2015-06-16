@@ -56,7 +56,7 @@
   // iterator function over each item in the input collection.
 
   _.each = function(collection, iterator) {
-    if (collection.constructor === Array) {
+    if (Array.isArray(collection)) {
       for (var i = 0; i < collection.length; i++) {
         iterator(collection[i], i, collection);
       }
@@ -64,7 +64,7 @@
       for (var key in collection) {
         iterator(collection[key], key, collection);
       }
-    }  
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -86,27 +86,27 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
-    
+
     var result = [];
 
     _.each(collection, function(value) {
       if (test(value)) {
         result.push(value);
-      }    
+      }
     });
 
     return result;
 
-  };  
+  };
 
-  /*  
+  /*
     var result = [];
     if (collection.constructor === Object) {
       for (var x in collection) {
         if (test(collection[x])) {
           result.push(collection[x]);
         }
-      }  
+      }
     }
     else {
       for (var i = 0; i < collection.length; i++) {
@@ -114,7 +114,7 @@
           result.push(collection[i]);
         }
       }
-    }   
+    }
     return result;
 
   };
@@ -130,7 +130,7 @@
     });
 
   };
- 
+
  /* old solution:
     var result = [];
     if (collection.constructor === Object) {
@@ -138,7 +138,7 @@
         if (!test(collection[x])) {
           result.push(collection[x]);
         }
-      }  
+      }
     }
     else {
       for (var i = 0; i < collection.length; i++) {
@@ -146,9 +146,9 @@
           result.push(collection[i]);
         }
       }
-    }   
+    }
     return result;
- */   
+ */
 
  /* old solution using _.each()
 
@@ -157,11 +157,11 @@
     _.each(collection, function(value, key, collection) {
       if (!test(value)) {
         result.push(value);
-      }    
+      }
     });
 
     return result;
-  
+
  */
 
 /*
@@ -174,7 +174,7 @@
       return filtered.indexOf(x) < 0;
     });
   };
- */ 
+ */
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
@@ -183,13 +183,13 @@
 
     for (var i = 0; i < array.length; i++) {
       unique[array[i]] = array[i];
-    } 
+    }
 
     for (var key in unique) {
       results.push(unique[key]);
     }
 
-    return results; 
+    return results;
   };
 
 /* Old solution:
@@ -197,9 +197,9 @@
     var results = [];
     array = array.sort(function(a, b) {
       return a - b;
-    }); 
-    var compare = array[0];  
-    results.push(compare); 
+    });
+    var compare = array[0];
+    results.push(compare);
     for (var i = 1; i < array.length; i++) {
       if (array[i] !== compare) {
         compare = array[i];
@@ -211,13 +211,13 @@
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
-    
+
     var results = [];
 
     _.each(collection, function(value, key, collection) {
       results.push(iterator(value, key, collection));
     });
-    
+
     return results;
   };
 
@@ -226,16 +226,16 @@
     if (collection.constructor === Object) {
       for (var x in collection) {
         newArray.push(iterator(collection[x]));
-      }  
+      }
     }
     else {
       for (var i = 0; i < collection.length; i++) {
-        newArray.push(iterator(collection[i])); 
-      }  
-    }  
+        newArray.push(iterator(collection[i]));
+      }
+    }
     return newArray;
 
-*/  
+*/
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -261,42 +261,52 @@
   // Reduces an array or object to a single value by repetitively calling
   // iterator(accumulator, item) for each item. accumulator should be
   // the return value of the previous iterator call.
-  //  
+  //
   // You can pass in a starting value for the accumulator as the third argument
   // to reduce. If no starting value is passed, the first element is used as
   // the accumulator, and is never passed to the iterator. In other words, in
   // the case where a starting value is not passed, the iterator is not invoked
   // until the second element, with the first element as it's second argument.
-  //  
+  //
   // Example:
   //   var numbers = [1,2,3];
   //   var sum = _.reduce(numbers, function(total, number){
   //     return total + number;
   //   }, 0); // should be 6
-  //  
+  //
   //   var identity = _.reduce([5], function(total, number){
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
 
   _.reduce = function(collection, iterator, accumulator) {
-  
-  var initalizing = arguments.length === 2;
 
-  _.each(collection, function (value) {
-    if (initalizing) {
+  _.each(collection, function(value) {
+    if (accumulator === undefined) {
       accumulator = value;
-      initalizing = false;
     } else {
       accumulator = iterator(accumulator, value);
-    }  
-  });  
+    }
+  });
 
   return accumulator;
+};
+  // var initalizing = arguments.length === 2;
 
-  };
+  // _.each(collection, function (value) {
+  //   if (initalizing) {
+  //     accumulator = value;
+  //     initalizing = false;
+  //   } else {
+  //     accumulator = iterator(accumulator, value);
+  //   }
+  // });
 
-/* other solution: 
+  // return accumulator;
+
+  // };
+
+/* other solution:
 
     if (arguments.length !== 3) {
       if (collection.constructor === Object) {
@@ -309,30 +319,30 @@
        else {
         accumulator = collection.shift();
       }
-    }  
+    }
     if (collection.constructor === Object) {
       for (var x in collection) {
         accumulator = iterator(accumulator, collection[x]);
       }
-    } 
+    }
     else {
       for (var i = 0; i < collection.length; i++) {
         accumulator = iterator(accumulator, collection[i]);
       }
-    }  
+    }
   return accumulator;
 
-*/  
+*/
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
-      if (wasFound) {
+    return _.reduce(collection, function(found, value) {
+      if (found) {
         return true;
       }
-      return item === target;
+      return value === target;
     }, false);
   };
 
@@ -340,7 +350,7 @@
   // Determine whether all of the elements match a truth test.
   // TIP: Try re-using reduce() here.
   _.every = function(collection, iterator) {
-    
+
     iterator = iterator || _.identity;
 
     return !!_.reduce(collection, function(trueSoFar, value) {
@@ -354,7 +364,7 @@
       iterator = function(predicate) {
         return predicate === true;
       }
-    }  
+    }
     for (var i = 0; i < collection.length; i++) {
       if (!iterator(collection[i])) {
         return false;
@@ -362,7 +372,7 @@
     }
     return true;
 
-*/  
+*/
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
@@ -373,17 +383,17 @@
 
     return !!_.reduce(collection, function(trueSoFar, value) {
       return trueSoFar || iterator(value);
-    }, false); 
+    }, false);
 
   };
 
-/* Old solution: 
+/* Old solution:
 
     if (arguments.length !== 2) {
       iterator = function(predicate) {
         return predicate === true;
       }
-    }  
+    }
     for (var i = 0; i < collection.length; i++) {
       if (iterator(collection[i])) {
         return true;
@@ -419,10 +429,10 @@
       });
     });
 
-    return obj;  
+    return obj;
 };
 
-/* old solution: 
+/* old solution:
 
   for (var i = 1; i < arguments.length; i++) {
     var sourceobj = arguments[i];
@@ -437,13 +447,13 @@
   // exists in obj
 
   _.defaults = function(obj) {
-  
+
     _.each(arguments,function(source) {
       _.each(source, function(value, key) {
         obj[key] === undefined && (obj[key] = value);
       });
     });
-    return obj;    
+    return obj;
 };
 
 /* other solution:
@@ -458,7 +468,7 @@
   }
   return obj;
 
-*/  
+*/
 
   /**
    * FUNCTIONS
@@ -489,6 +499,7 @@
       // The new function always returns the originally computed result.
       return result;
     };
+
   };
 
   // Memorize an expensive function's results by storing them. You may assume
@@ -500,7 +511,7 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
-  
+
     var results = {};
 
     return function() {
@@ -518,7 +529,7 @@
       if (!func2.cache[x]) {
         func2.cache[x] = func(x);
       }
-      return func2.cache[x];  
+      return func2.cache[x];
     };
     func2.cache = {};
     return func2;
@@ -532,9 +543,9 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    
+
     var args = Array.prototype.slice.call(arguments,2);  // turns argument values in array, starting index 2.
-    
+
     return setTimeout(function() {
       func.apply(this, args); //why in the video does it say func.apply(null, args);
       }, wait);
@@ -566,7 +577,7 @@
     if (shuffleOrder === testOrder) {
       return _.shuffle(sourceArray);
     }
-    for (var i = 0; i < sourceArray.length; i++ ) {
+    for (var i = 0; i < sourceArray.length; i++) {
       shuffledArray[i] = sourceArray[shuffledArray[i]];
     }
     function getFull() {
@@ -574,11 +585,11 @@
       for (var i = 0; i < shuffledArray.length; i++) {
         if (shuffledArray[i] === element) {
           return getFull();
-        }    
-      } 
+        }
+      }
       shuffledArray.push(element);
     }
-    return shuffledArray;  
+    return shuffledArray;
   };
 
 
@@ -597,7 +608,7 @@
     return _.map(collection,function(item) {
       var method = typeof functionOrKey === 'string' ? item[functionOrKey] : functionOrKey;
       return method.apply(item, args);
-    }); 
+    });
 
   };
 
@@ -613,12 +624,12 @@
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-  
+
   _.zip = function() {
     var hold = [], results = [];
     for (var i = 0; i < arguments.length; i++) {
       hold.push(arguments[i].length);
-    } 
+    }
     hold = hold.sort(function(a,b) { return b - a; });
     console.log(hold);
 
@@ -628,7 +639,7 @@
         eachArray.push(arguments[k][j]);
       }
       results.push(eachArray);
-    } 
+    }
     console.log(results);
     return results;
   };
@@ -640,7 +651,7 @@
   _.flatten = function(nestedArray) {
     return nestedArray.reduce(function(a,b) {
       return a.concat(b);
-    });        
+    });
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
@@ -660,4 +671,5 @@
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
   };
+
 }());
