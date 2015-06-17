@@ -178,19 +178,46 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var unique = {};
+
+    var storage = {};
+
+    _.each(array, function(value) { // storage in hash
+      storage[value] = value;
+    });
+
+    return _.map(storage, _.identity); // return itself
+  };
+
+/*  MKS15 solution
+  _.uniq = function(array) {
+
     var results = [];
 
-    for (var i = 0; i < array.length; i++) {
-      unique[array[i]] = array[i];
-    }
-
-    for (var key in unique) {
-      results.push(unique[key]);
-    }
+    _.each(array, function(value) {
+      if (_.indexOf(results, value) === -1) {
+        results.push(value);
+      }
+    });
 
     return results;
   };
+
+*/
+
+  // _.uniq = function(array) {
+  //   var unique = {};
+  //   var results = [];
+
+  //   for (var i = 0; i < array.length; i++) {
+  //     unique[array[i]] = array[i];
+  //   }
+
+  //   for (var key in unique) {
+  //     results.push(unique[key]);
+  //   }
+
+  //   return results;
+  // };
 
 /* Old solution:
 
@@ -281,8 +308,11 @@
 
   _.reduce = function(collection, iterator, accumulator) {
 
+  var initial = arguments.length !== 3;
+
   _.each(collection, function(value) {
-    if (accumulator === undefined) {
+    if (initial) {
+      initial = false;
       accumulator = value;
     } else {
       accumulator = iterator(accumulator, value);
@@ -290,21 +320,17 @@
   });
 
   return accumulator;
-};
-  // var initalizing = arguments.length === 2;
 
-  // _.each(collection, function (value) {
-  //   if (initalizing) {
+  // _.each(collection, function(value) {
+  //   if (accumulator === undefined) {
   //     accumulator = value;
-  //     initalizing = false;
   //   } else {
   //     accumulator = iterator(accumulator, value);
   //   }
   // });
 
   // return accumulator;
-
-  // };
+};
 
 /* other solution:
 
@@ -339,10 +365,10 @@
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
     return _.reduce(collection, function(found, value) {
-      if (found) {
+      if (value === target) {
         return true;
       }
-      return value === target;
+      return found;
     }, false);
   };
 
@@ -351,7 +377,7 @@
   // TIP: Try re-using reduce() here.
   _.every = function(collection, iterator) {
 
-    iterator = iterator || _.identity;
+    iterator = iterator || _.identity; // assigns identity function (returns own value) when iterator is undefined
 
     return !!_.reduce(collection, function(trueSoFar, value) {
       return trueSoFar && iterator(value);
@@ -359,10 +385,25 @@
 
   };
 
+  // _.every = function(collection, iterator) { // with each
+
+  // iterator = iterator || _.identity;
+  // var results = true;
+
+  // _.each(collection, function(value) {
+  //   if (!iterator(value)) {
+  //     results = false;
+  //   }
+  // });
+
+  // return results;
+
+  // };
+
 /* old solution:
     if (arguments.length !== 2) {
       iterator = function(predicate) {
-        return predicate === true;
+        return predicate;
       }
     }
     for (var i = 0; i < collection.length; i++) {
@@ -373,6 +414,7 @@
     return true;
 
 */
+
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
