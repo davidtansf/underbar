@@ -35,7 +35,7 @@
 
       it('fails for a collection containing mixed falsy and truthy results', function() {
         expect(_.every([true, false, 1], _.identity)).to.be.false;
-        expect(_.every([1, undefined, true], _.identity)).to.be.false;
+        expect(_.every([1, undefined, true], _.identity)).to.be.false; // it will fail for accumulator === undefined
       });
 
       it('should work when provided a collection containing undefined values', function() {
