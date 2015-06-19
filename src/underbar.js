@@ -375,30 +375,41 @@
 
   // Determine whether all of the elements match a truth test.
   // TIP: Try re-using reduce() here.
-  _.every = function(collection, iterator) {
 
-    iterator = iterator || _.identity; // assigns identity function (returns own value) when iterator is undefined
+  // _.every = function(collection, iterator) { // solve with _.each
 
-    return !!_.reduce(collection, function(trueSoFar, value) {
-      return trueSoFar && iterator(value);
-    }, true);
+  //   var results = true; // can't break out of _.each using break, must have a tracking variable
 
-  };
+  //   iterator = iterator || _.identity;
 
-  // _.every = function(collection, iterator) { // with each
+  //   _.each(collection, function(item) {
+  //     if (!iterator(item)) {
+  //       results = false;
+  //     }
+  //   });
 
-  // iterator = iterator || _.identity;
-  // var results = true;
-
-  // _.each(collection, function(value) {
-  //   if (!iterator(value)) {
-  //     results = false;
-  //   }
-  // });
-
-  // return results;
+  //   return results;
 
   // };
+
+/*
+  _.every = function(collection, iterator) { // solve with _.filter
+
+    iterator = iterator || _.identity;
+    return _.filter(collection, iterator).length === collection.length;
+
+  };
+*/
+
+_.every = function(collection, iterator) { // solve with _.reduce
+
+  iterator = iterator || _.identity; // assigns identity function (returns own value) when iterator is undefined
+
+  return !!_.reduce(collection, function(trueSoFar, value) {
+    return trueSoFar && iterator(value);
+  }, true);
+
+};
 
 /* old solution:
     if (arguments.length !== 2) {
@@ -419,21 +430,58 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   // TIP: There's a very clever way to re-use every() here.
-  _.some = function(collection, iterator) {
+
+/*
+  _.some = function(collection, iterator) { // solve with _.each
+
+    var results = false; // can't break out of _.each using break, must have a tracking variable
 
     iterator = iterator || _.identity;
 
-    return !!_.reduce(collection, function(trueSoFar, value) {
-      return trueSoFar || iterator(value);
+    _.each(collection, function(item) {
+      if (iterator(item)) {
+        results = true;
+      }
+    });
+
+    return results;
+  };
+*/
+
+/*
+  _.some = function(collection, iterator) { // solve with _.filter
+
+    iterator = iterator || _.identity;
+    return _.filter(collection, iterator).length > 0;
+
+  };
+*/
+
+/*
+  _.some = function(collection, iterator) { // solve with _.reduce
+
+    iterator = iterator || _.identity;
+
+    return !!_.reduce(collection, function(oneTrue, value) {
+      return oneTrue || iterator(value);
     }, false);
 
+  };
+*/
+  _.some = function(collection, iterator) { // solve with _.every
+
+    iterator = iterator || _.identity;
+
+    return !_.every(collection, function(value) {
+      return !iterator(value);
+    });
   };
 
 /* Old solution:
 
     if (arguments.length !== 2) {
       iterator = function(predicate) {
-        return predicate === true;
+        return predicate === true;  // should be return !!predicate === true;
       }
     }
     for (var i = 0; i < collection.length; i++) {
