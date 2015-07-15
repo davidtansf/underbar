@@ -41,13 +41,6 @@
     return n === undefined ? array[array.length-1] : array.slice(Math.max(array.length-n,0));
   };
 
-  /*
-    if (n > array.length) {
-      n = array.length;
-    }
-    return n === undefined ? array[array.length - 1] : array.slice(array.length - n, array.length);
-  */
-
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
@@ -99,27 +92,6 @@
 
   };
 
-  /*
-    var result = [];
-    if (collection.constructor === Object) {
-      for (var x in collection) {
-        if (test(collection[x])) {
-          result.push(collection[x]);
-        }
-      }
-    }
-    else {
-      for (var i = 0; i < collection.length; i++) {
-        if (test(collection[i])) {
-          result.push(collection[i]);
-        }
-      }
-    }
-    return result;
-
-  };
-  */
-
   // Return all elements of an array that don't pass a truth test.
   // TIP: see if you can re-use _.filter() here, without simply
   // copying code in and modifying it.
@@ -131,26 +103,7 @@
 
   };
 
- /* old solution:
-    var result = [];
-    if (collection.constructor === Object) {
-      for (var x in collection) {
-        if (!test(collection[x])) {
-          result.push(collection[x]);
-        }
-      }
-    }
-    else {
-      for (var i = 0; i < collection.length; i++) {
-        if (!test(collection[i])) {
-          result.push(collection[i]);
-        }
-      }
-    }
-    return result;
- */
-
- /* old solution using _.each()
+ /* solution using _.each()
 
     var result = [];
 
@@ -162,18 +115,6 @@
 
     return result;
 
- */
-
-/*
-
-  // After researching solution for using _.filter:
-
-  _.reject = function(collection, test) {
-    var filtered = _.filter(collection, test);
-     _.filter(collection, function(x) {
-      return filtered.indexOf(x) < 0;
-    });
-  };
  */
 
   // Produce a duplicate-free version of the array.
@@ -188,7 +129,8 @@
     return _.map(storage, _.identity); // return itself
   };
 
-/*  MKS15 solution
+/*  solution using _.indexOf()
+
   _.uniq = function(array) {
 
     var results = [];
@@ -204,38 +146,6 @@
 
 */
 
-  // _.uniq = function(array) {
-  //   var unique = {};
-  //   var results = [];
-
-  //   for (var i = 0; i < array.length; i++) {
-  //     unique[array[i]] = array[i];
-  //   }
-
-  //   for (var key in unique) {
-  //     results.push(unique[key]);
-  //   }
-
-  //   return results;
-  // };
-
-/* Old solution:
-
-    var results = [];
-    array = array.sort(function(a, b) {
-      return a - b;
-    });
-    var compare = array[0];
-    results.push(compare);
-    for (var i = 1; i < array.length; i++) {
-      if (array[i] !== compare) {
-        compare = array[i];
-        results.push(compare);
-      }
-    }
-    return results;
-*/
-
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
 
@@ -248,21 +158,6 @@
     return results;
   };
 
-/*
-    var newArray = [];
-    if (collection.constructor === Object) {
-      for (var x in collection) {
-        newArray.push(iterator(collection[x]));
-      }
-    }
-    else {
-      for (var i = 0; i < collection.length; i++) {
-        newArray.push(iterator(collection[i]));
-      }
-    }
-    return newArray;
-
-*/
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -320,45 +215,7 @@
   });
 
   return accumulator;
-
-  // _.each(collection, function(value) {
-  //   if (accumulator === undefined) {
-  //     accumulator = value;
-  //   } else {
-  //     accumulator = iterator(accumulator, value);
-  //   }
-  // });
-
-  // return accumulator;
 };
-
-/* other solution:
-
-    if (arguments.length !== 3) {
-      if (collection.constructor === Object) {
-        for (x in collection) {
-          accumulator = collection[x];
-          delete collection[x];
-          break;
-        }
-      }
-       else {
-        accumulator = collection.shift();
-      }
-    }
-    if (collection.constructor === Object) {
-      for (var x in collection) {
-        accumulator = iterator(accumulator, collection[x]);
-      }
-    }
-    else {
-      for (var i = 0; i < collection.length; i++) {
-        accumulator = iterator(accumulator, collection[i]);
-      }
-    }
-  return accumulator;
-
-*/
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
@@ -375,32 +232,6 @@
 
   // Determine whether all of the elements match a truth test.
   // TIP: Try re-using reduce() here.
-
-  // _.every = function(collection, iterator) { // solve with _.each
-
-  //   var results = true; // can't break out of _.each using break, must have a tracking variable
-
-  //   iterator = iterator || _.identity;
-
-  //   _.each(collection, function(item) {
-  //     if (!iterator(item)) {
-  //       results = false;
-  //     }
-  //   });
-
-  //   return results;
-
-  // };
-
-/*
-  _.every = function(collection, iterator) { // solve with _.filter
-
-    iterator = iterator || _.identity;
-    return _.filter(collection, iterator).length === collection.length;
-
-  };
-*/
-
 _.every = function(collection, iterator) { // solve with _.reduce
 
   iterator = iterator || _.identity; // assigns identity function (returns own value) when iterator is undefined
@@ -411,25 +242,40 @@ _.every = function(collection, iterator) { // solve with _.reduce
 
 };
 
-/* old solution:
-    if (arguments.length !== 2) {
-      iterator = function(predicate) {
-        return predicate;
-      }
-    }
-    for (var i = 0; i < collection.length; i++) {
-      if (!iterator(collection[i])) {
-        return false;
-      }
-    }
-    return true;
+/*
+  _.every = function(collection, iterator) { // solve with _.each()
+    var results = true;
+    iterator = iterator || _.identity;
 
+    _.each(collection, function(item) {
+      if (!iterator(item)) {
+        results = false;
+      }
+    });
+    return results;
+  };
 */
 
+/*
+  _.every = function(collection, iterator) { // solve with _.filter()
+
+    iterator = iterator || _.identity;
+    return _.filter(collection, iterator).length === collection.length;
+
+  };
+*/
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   // TIP: There's a very clever way to re-use every() here.
+  _.some = function(collection, iterator) { // solve with _.every
+
+    iterator = iterator || _.identity;
+
+    return !_.every(collection, function(value) {
+      return !iterator(value);
+    });
+  };
 
 /*
   _.some = function(collection, iterator) { // solve with _.each
@@ -468,29 +314,6 @@ _.every = function(collection, iterator) { // solve with _.reduce
 
   };
 */
-  _.some = function(collection, iterator) { // solve with _.every
-
-    iterator = iterator || _.identity;
-
-    return !_.every(collection, function(value) {
-      return !iterator(value);
-    });
-  };
-
-/* Old solution:
-
-    if (arguments.length !== 2) {
-      iterator = function(predicate) {
-        return predicate === true;  // should be return !!predicate === true;
-      }
-    }
-    for (var i = 0; i < collection.length; i++) {
-      if (iterator(collection[i])) {
-        return true;
-      }
-    }
-    return false;
-*/
 
   /**
    * OBJECTS
@@ -522,17 +345,6 @@ _.every = function(collection, iterator) { // solve with _.reduce
     return obj;
 };
 
-/* old solution:
-
-  for (var i = 1; i < arguments.length; i++) {
-    var sourceobj = arguments[i];
-    for (var x in sourceobj) {
-      obj[x] = sourceobj[x];
-    }
-  }
-  return obj;
-*/
-
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
 
@@ -545,20 +357,6 @@ _.every = function(collection, iterator) { // solve with _.reduce
     });
     return obj;
 };
-
-/* other solution:
-
-  for (var i = 1; i < arguments.length; i++) {
-    var sourceobj = arguments[i];
-    for (var x in sourceobj) {
-      if (!obj.hasOwnProperty(x)) {
-          obj[x] = sourceobj[x];
-      }
-    }
-  }
-  return obj;
-
-*/
 
   /**
    * FUNCTIONS
@@ -653,34 +451,17 @@ _.every = function(collection, iterator) { // solve with _.reduce
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
-  _.shuffle = function(sourceArray) {
-    var shuffledArray = [];
-    while (shuffledArray.length < sourceArray.length) {
-      getFull();
-    }
-    var shuffleOrder = '';
-    var testOrder = '';
-    for (var j = 0; j < sourceArray.length; j++) {
-      shuffleOrder += shuffledArray[j].toString();
-      testOrder += j.toString();
-    }
-    if (shuffleOrder === testOrder) {
-      return _.shuffle(sourceArray);
-    }
-    for (var i = 0; i < sourceArray.length; i++) {
-      shuffledArray[i] = sourceArray[shuffledArray[i]];
-    }
-    function getFull() {
-      var element = Math.floor(Math.random() * sourceArray.length);
-      for (var i = 0; i < shuffledArray.length; i++) {
-        if (shuffledArray[i] === element) {
-          return getFull();
-        }
-      }
-      shuffledArray.push(element);
-    }
-    return shuffledArray;
-  };
+  _.shuffle = function(deck) {
+  var shuffled = [];
+
+  while (deck.length > 0) {
+    var value = Math.floor(Math.random() * deck.length);
+    shuffled.push(deck.splice(value, 1).toString());
+  }
+
+  return shuffled;
+
+};
 
 
   /***********************************************************************
