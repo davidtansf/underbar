@@ -467,14 +467,15 @@ _.every = function(collection, iterator) { // solve with _.reduce
   _.shuffle = function(deck) {
 
   var copy = deck.slice();
-  var shuffled = [];
+  var times = copy.length;
 
-  while (copy.length > 0) {
-    var value = Math.floor(Math.random() * copy.length);
-    shuffled.push(copy.splice(value, 1).toString());
+  while (times) {
+    var value = Math.floor(Math.random() * times);
+    copy.push(Number(copy.splice(value, 1)));
+    times--;
   }
 
-  return shuffled;
+  return copy;
 
 };
 
