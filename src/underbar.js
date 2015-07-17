@@ -218,6 +218,7 @@
 };
 
   // Determine if the array or object contains a given value (using `===`).
+
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
@@ -229,6 +230,18 @@
     }, false);
   };
 
+
+/*
+  _.contains = function(collection, target) { // slighty different implementation, though less readable IMO
+
+    return _.reduce(collection, function(found,value) {
+      if (found) {
+        return found;
+      }
+      return target === value;
+    }, false)
+  };
+*/
 
   // Determine whether all of the elements match a truth test.
   // TIP: Try re-using reduce() here.
@@ -452,11 +465,13 @@ _.every = function(collection, iterator) { // solve with _.reduce
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(deck) {
+
+  var copy = deck.slice();
   var shuffled = [];
 
-  while (deck.length > 0) {
-    var value = Math.floor(Math.random() * deck.length);
-    shuffled.push(deck.splice(value, 1).toString());
+  while (copy.length > 0) {
+    var value = Math.floor(Math.random() * copy.length);
+    shuffled.push(copy.splice(value, 1).toString());
   }
 
   return shuffled;
