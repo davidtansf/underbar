@@ -506,12 +506,21 @@ _.every = function(collection, iterator) { // solve with _.reduce
   _.sortBy = function(collection, iterator) {
   };
 
+  // Takes a multidimensional array and converts it to a one-dimensional array.
+  // The new array should contain all elements of the multidimensional array.
+  //
+  // Hint: Use Array.isArray to check if something is an array
+  _.flatten = function(nestedArray) {
+    return _.reduce(nestedArray,function(a,b) {
+      return a.concat(Array.isArray(b) ? _.flatten(b) : [b]);
+    },[]);
+  };
+
   // Zip together two or more arrays with elements of the same index
   // going together.
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-
   _.zip = function() {
     var hold = [], results = [];
     for (var i = 0; i < arguments.length; i++) {
@@ -529,16 +538,6 @@ _.every = function(collection, iterator) { // solve with _.reduce
     }
     console.log(results);
     return results;
-  };
-
-  // Takes a multidimensional array and converts it to a one-dimensional array.
-  // The new array should contain all elements of the multidimensional array.
-  //
-  // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray) {
-    return nestedArray.reduce(function(a,b) {
-      return a.concat(b);
-    });
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
