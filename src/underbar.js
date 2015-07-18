@@ -504,6 +504,15 @@ _.every = function(collection, iterator) { // solve with _.reduce
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    if(typeof iterator === 'string') {
+      var temp = iterator;
+      iterator = function(item) {
+        return item[temp];
+      };
+    }
+    return collection.sort(function(a,b) {
+      return iterator(a) - iterator(b);
+    });
   };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
@@ -527,7 +536,6 @@ _.every = function(collection, iterator) { // solve with _.reduce
       hold.push(arguments[i].length);
     }
     hold = hold.sort(function(a,b) { return b - a; });
-    console.log(hold);
 
     for (var j = 0; j < hold[0]; j++) {
       var eachArray = [];
@@ -536,7 +544,6 @@ _.every = function(collection, iterator) { // solve with _.reduce
       }
       results.push(eachArray);
     }
-    console.log(results);
     return results;
   };
 
