@@ -411,32 +411,19 @@ _.every = function(collection, iterator) { // solve with _.reduce
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
   _.memoize = function(func) {
 
     var results = {};
 
     return function() {
       var arg = JSON.stringify(arguments);
-      if (!results[arg]) {
-        results[arg] = func.apply(this,arguments);
-      }
-      return results[arg];
+      console.log(results);
+      return results[arg] = results[arg] || func.apply(this,arguments);
     };
 
   };
 
-/*
-    var func2 = function(x) {
-      if (!func2.cache[x]) {
-        func2.cache[x] = func(x);
-      }
-      return func2.cache[x];
-    };
-    func2.cache = {};
-    return func2;
-  };
-
-*/
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -448,7 +435,7 @@ _.every = function(collection, iterator) { // solve with _.reduce
     var args = Array.prototype.slice.call(arguments,2);  // turns argument values in array, starting index 2.
 
     return setTimeout(function() {
-      func.apply(this, args); //why in the video does it say func.apply(null, args);
+      func.apply(null, args);
       }, wait);
 
   };
@@ -519,10 +506,10 @@ _.every = function(collection, iterator) { // solve with _.reduce
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray) {
-    return _.reduce(nestedArray,function(a,b) {
-      return a.concat(Array.isArray(b) ? _.flatten(b) : [b]);
-    },[]);
+  _.flatten = function(nestedArray, result) {
+    return _.reduce(nestedArray, function(memo, val){
+      return memo.concat(Array.isArray(val) ? _.flatten(val) : [val]);
+    }, []);
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -550,11 +537,36 @@ _.every = function(collection, iterator) { // solve with _.reduce
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+
+    // Get a copy of all the other arrays. We'll use the array at arguments[0]
+    // as our baseline; we only need to check the values in arguments[0] since
+    // if another array contains a value not contained within our first array,
+    // it's not a valid value.
+    var others = Array.prototype.slice.call(arguments, 1);
+
+    // Now, let's get a copy of arguments[0] that doesn't contain duplicates and
+    // see if each value appears as an indexOf every single other array.
+    return _.filter(_.uniq(arguments[0]), function(item) {
+      return _.every(others, function(array) {
+        return _.indexOf(array, item) > -1;
+      });
+    });
+
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+
+    // Get a flattened version of all other input arrays
+    var others = _.flatten(Array.prototype.slice.call(arguments, 1));
+
+    // Extract only the items that aren't contained within the flattened
+    // `others` array
+    return _.filter(array, function(item) {
+      return !_.contains(others, item);
+    });
+
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -563,6 +575,20 @@ _.every = function(collection, iterator) { // solve with _.reduce
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+
+    var flag = false;
+
+    return function() {
+      if (flag !== true) {
+        flag = true;
+        func.apply(Array.prototype.slice.apply(arguments));
+
+        setTimeout(function() {
+          flag = false;
+        }, wait);
+      }
+    };
+
   };
 
 }());

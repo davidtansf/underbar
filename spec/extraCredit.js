@@ -81,7 +81,7 @@
     });
 
     describe('zip', function() {
-      xit('should zip together arrays of different lengths', function() {
+      it('should zip together arrays of different lengths', function() {
         var names = ['moe', 'larry', 'curly'], ages = [30, 40, 50], leaders = [true];
 
         expect(_.zip(names, ages, leaders)).to.eql([
@@ -93,7 +93,7 @@
     });
 
     describe('intersection', function() {
-      xit('should take the set intersection of two arrays', function() {
+      it('should take the set intersection of two arrays', function() {
         var stooges = ['moe', 'curly', 'larry'];
         var leaders = ['moe', 'groucho'];
 
@@ -102,13 +102,13 @@
     });
 
     describe('difference', function() {
-      xit('should return the difference between two arrays', function() {
+      it('should return the difference between two arrays', function() {
         var diff = _.difference([1,2,3], [2,30,40]);
 
         expect(diff).to.eql([1,3]);
       });
 
-      xit('should return the difference between three arrays', function() {
+      it('should return the difference between three arrays', function() {
         var result = _.difference([1, 2, 3, 4], [2, 30, 40], [1, 11, 111]);
 
         expect(result).to.eql([3, 4]);
@@ -122,7 +122,7 @@
         callback = sinon.spy();
       });
 
-      xit('should return a function callable twice in the first 200ms', function() {
+      it('should return a function callable twice in the first 200ms', function() {
         var fn = _.throttle(callback, 100);
         fn(); // called
         setTimeout(fn, 50);
